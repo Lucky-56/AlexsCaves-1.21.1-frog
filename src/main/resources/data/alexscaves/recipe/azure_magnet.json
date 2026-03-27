@@ -10,7 +10,7 @@
       "item": "alexscaves:azure_neodymium_ingot"
     },
     "I": {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "result": { "id": "alexscaves:azure_magnet",

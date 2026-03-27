@@ -10,10 +10,10 @@
       "item": "alexscaves:charred_remnant"
     },
     "U": {
-      "tag": "neoforge:raw_materials/uranium"
+      "tag": "c:raw_materials/uranium"
     },
     "I": {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "result": { "id": "alexscaves:nuclear_siren"

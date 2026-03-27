@@ -10,7 +10,7 @@
       "tag": "alexscaves:rock_candies"
     },
     "D": {
-      "tag": "neoforge:dyes/red"
+      "tag": "c:dyes/red"
     }
   },
   "result": { "id": "alexscaves:rock_candy_red",

@@ -38,7 +38,7 @@ public class UndergroundRuinsFeature extends Feature<UndergroundRuinsFeatureConf
         WorldGenLevel level = context.level();
         BlockPos chunkCenter = context.origin().atY(level.getMinBuildHeight() + 3);
         List<BlockPos> genPos = new ArrayList<>();
-        int surface = level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, chunkCenter.getX(), chunkCenter.getZ()) - 5;
+        int surface = Math.min(level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, chunkCenter.getX(), chunkCenter.getZ()) - 5, level.getSeaLevel());
         int j = 0;
         while (chunkCenter.getY() < surface) {
             BlockPos next = chunkCenter.above();

@@ -127,7 +127,7 @@ public class ACSurfaceRuleConditionRegistry {
                         return false;
                     }
 
-                    BiomeGenerationNoiseCondition noiseCondition = BiomeGenerationConfig.BIOMES.get(biomeAtPos);
+                    BiomeGenerationNoiseCondition noiseCondition = BiomeGenerationConfig.getBiomesSnapshot().get(biomeAtPos);
                     return noiseCondition != null && noiseCondition.getRarityOffset() == ACBiomeConditionSource.this.rarityOffset;
                 }
             }

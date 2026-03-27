@@ -70,14 +70,6 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
     private float sonarFlashAmount;
     private int creakTime;
     private boolean wereLightsOn;
-    private float prevRenderYaw;
-    private float renderYaw;
-    private float prevRenderPitch;
-    private float renderPitch;
-    private boolean renderRotationInitialized;
-    private Vec3 prevRenderOffset = Vec3.ZERO;
-    private Vec3 renderOffset = Vec3.ZERO;
-    private boolean renderOffsetInitialized;
 
     public SubmarineEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -128,18 +120,12 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
         float leftPropellerRot = getLeftPropellerRot();
         float rightPropellerRot = getRightPropellerRot();
         float backPropellerRot = getBackPropellerRot();
-        if (controlDownTicks > 0 || this.getDamageLevel() >= 4 && !this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0, -0.08, 0));
-            controlDownTicks--;
-        } else if (controlUpTicks > 0 && getWaterHeight() > 1.5F) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0, 0.08, 0));
-            controlUpTicks--;
-        }
         if (this.tickCount % 200 == 0 && damageSustained > 0) {
             damageSustained--;
         }
+        this.setYRot(Mth.wrapDegrees(this.getYRot()));
         this.xRotO = this.getXRot();
-        this.yRotO = Mth.wrapDegrees(this.getYRot());
+        this.yRotO = this.getYRot();
         this.prevSonarFlashAmount = sonarFlashAmount;
         if(this.getDangerAlertTicks() > 0 && sonarFlashAmount < 1.0F){
             sonarFlashAmount += 0.25F;
@@ -156,16 +142,18 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
                 this.playSound(ACSoundRegistry.SUBMARINE_CREAK.get());
             }
         }
+        if (controlDownTicks > 0 || this.getDamageLevel() >= 4 && !this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().add(0, -0.08, 0));
+            controlDownTicks--;
+        } else if (controlUpTicks > 0 && getWaterHeight() > 1.5F) {
+            this.setDeltaMovement(this.getDeltaMovement().add(0, 0.08, 0));
+            controlUpTicks--;
+        }
         float acceleration = this.getAcceleration();
         if (this.level().isClientSide) {
             if (this.lSteps > 0) {
-                double d5 = this.getX() + (this.lx - this.getX()) / (double) this.lSteps;
-                double d6 = this.getY() + (this.ly - this.getY()) / (double) this.lSteps;
-                double d7 = this.getZ() + (this.lz - this.getZ()) / (double) this.lSteps;
-                this.setYRot(Mth.wrapDegrees((float) this.lyr));
-                this.setXRot(this.getXRot() + (float) (this.lxr - (double) this.getXRot()) / (float) this.lSteps);
+                this.lerpPositionAndRotationStep(this.lSteps, this.lx, this.ly, this.lz, this.lyr, this.lxr);
                 --this.lSteps;
-                this.setPos(d5, d6, d7);
             } else {
                 this.reapplyPosition();
             }
@@ -258,15 +246,6 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
             wereLightsOn = this.areLightsOn();
         }
         this.setXRot(ACMath.approachRotation(this.getXRot(), Mth.clamp(getDamageLevel() >= 4 ? 0 : xRotSet, -50, 50), 2));
-        if (this.level().isClientSide) {
-            updateRenderRotations();
-            Player player = AlexsCaves.PROXY.getClientSidePlayer();
-            if (player != null && player.isPassengerOfSameVehicle(this)) {
-                updateRenderOffset(player);
-            } else {
-                renderOffsetInitialized = false;
-            }
-        }
         prevLeftPropellerRot = leftPropellerRot;
         prevRightPropellerRot = rightPropellerRot;
         prevBackPropellerRot = backPropellerRot;
@@ -287,68 +266,17 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
         }
     }
 
-    public void lerpTo(double x, double y, double z, float yr, float xr, int steps, boolean b) {
+    @Override
+    public void lerpTo(double x, double y, double z, float yr, float xr, int steps) {
         this.lx = x;
         this.ly = y;
         this.lz = z;
-        this.lyr = yr;
+        // Wrap the target yaw relative to current yaw to prevent spinning
+        // the long way around (e.g. 350° -> 10° should go +20, not -340)
+        this.lyr = this.getYRot() + Mth.wrapDegrees(yr - this.getYRot());
         this.lxr = xr;
         this.lSteps = steps;
         this.setDeltaMovement(this.lxd, this.lyd, this.lzd);
-    }
-
-    private void updateRenderRotations() {
-        float targetYaw = this.getYRot();
-        float targetPitch = this.getXRot();
-        if (this.isControlledByLocalInstance()) {
-            Player player = AlexsCaves.PROXY.getClientSidePlayer();
-            if (player != null && player.isPassengerOfSameVehicle(this)) {
-                targetYaw = player.getYHeadRot();
-                targetPitch = player.getViewXRot(1.0F);
-            }
-        }
-        if (!renderRotationInitialized) {
-            renderRotationInitialized = true;
-            prevRenderYaw = targetYaw;
-            renderYaw = targetYaw;
-            prevRenderPitch = targetPitch;
-            renderPitch = targetPitch;
-            return;
-        }
-        prevRenderYaw = renderYaw;
-        prevRenderPitch = renderPitch;
-        float maxYawStep = this.isControlledByLocalInstance() ? 8.0F : 20.0F;
-        float maxPitchStep = this.isControlledByLocalInstance() ? 6.0F : 15.0F;
-        renderYaw = ACMath.approachRotation(renderYaw, targetYaw, maxYawStep);
-        renderPitch = Mth.approach(renderPitch, targetPitch, maxPitchStep);
-    }
-
-    public float getRenderYaw(float partialTicks) {
-        return Mth.rotLerp(partialTicks, prevRenderYaw, renderYaw);
-    }
-
-    public float getRenderPitch(float partialTicks) {
-        return Mth.lerp(partialTicks, prevRenderPitch, renderPitch);
-    }
-
-    private void updateRenderOffset(Player player) {
-        Vec3 targetOffset = this.getPosition(1.0F).subtract(player.getEyePosition(1.0F));
-        if (!renderOffsetInitialized) {
-            renderOffsetInitialized = true;
-            prevRenderOffset = targetOffset;
-            renderOffset = targetOffset;
-            return;
-        }
-        prevRenderOffset = renderOffset;
-        double lerp = this.isControlledByLocalInstance() ? 0.35D : 0.6D;
-        renderOffset = renderOffset.add(targetOffset.subtract(renderOffset).scale(lerp));
-    }
-
-    public Vec3 getRenderOffset(float partialTicks) {
-        double x = Mth.lerp(partialTicks, prevRenderOffset.x, renderOffset.x);
-        double y = Mth.lerp(partialTicks, prevRenderOffset.y, renderOffset.y);
-        double z = Mth.lerp(partialTicks, prevRenderOffset.z, renderOffset.z);
-        return new Vec3(x, y, z);
     }
 
     @Override
@@ -418,22 +346,16 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity living && !this.touchingUnloadedChunk()) {
             clampRotation(living);
-            if (passenger instanceof Player) {
+            if (!this.level().isClientSide && passenger instanceof Player) {
                 tickController((Player) passenger);
             }
-            float seatPitch = this.getXRot();
             float seatYaw = this.getYRot();
-            if (this.level().isClientSide && passenger == AlexsCaves.PROXY.getClientSidePlayer() && renderRotationInitialized) {
-                seatPitch = getRenderPitch(1.0F);
-                seatYaw = getRenderYaw(1.0F);
-            }
+            float seatPitch = this.getXRot();
             float f1 = -(seatPitch / 40F);
-            // Position player in the cockpit - matching original 1.20 values
             Vec3 seatOffset = new Vec3(0F, -0.2F, 0.8F + f1)
                     .xRot((float) Math.toRadians(seatPitch))
                     .yRot((float) Math.toRadians(-seatYaw));
-            // In 1.21, getMyRidingOffset is deprecated/changed, use a fixed offset that matches player riding offset
-            double passengerRidingOffset = -0.6D; // Standard player riding offset
+            double passengerRidingOffset = -0.6D;
             double d0 = this.getY() + this.getBbHeight() * 0.5F + seatOffset.y + passengerRidingOffset;
             moveFunction.accept(passenger, this.getX() + seatOffset.x, d0, this.getZ() + seatOffset.z);
             living.setAirSupply(Math.min(living.getAirSupply() + 2, living.getMaxAirSupply()));
@@ -487,7 +409,7 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
             } else {
                 turnRightTicks = 5;
             }
-            this.setYRot(this.getYRot() + turn * 2.5f);
+            this.setYRot(Mth.wrapDegrees(this.getYRot() + turn * 2.5f));
         }
         if (passenger.zza != 0) {
             float back = -Math.signum(passenger.zza);

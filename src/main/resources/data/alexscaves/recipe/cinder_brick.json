@@ -7,7 +7,7 @@
   ],
   "key": {
     "C": {
-      "tag": "neoforge:concrete"
+      "tag": "c:concrete"
     }
   },
   "result": { "id": "alexscaves:cinder_brick",

@@ -88,17 +88,15 @@ public abstract class AbstractCaveGenerationStructurePiece extends StructurePiec
                     int sectionIndex = chunkAccess.getSectionIndex(pos.getY());
                     if (sectionIndex >= 0 && sectionIndex < chunkAccess.getSections().length) {
                         LevelChunkSection section = chunkAccess.getSection(sectionIndex);
-                        PalettedContainer<Holder<Biome>> container = section.getBiomes().recreate();
-                        if(container != null){
-                            for (int biomeX = 0; biomeX < 4; ++biomeX) {
-                                for (int biomeY = 0; biomeY < 4; ++biomeY) {
-                                    for (int biomeZ = 0; biomeZ < 4; ++biomeZ) {
-                                        container.getAndSetUnchecked(biomeX, biomeY, biomeZ, biomeHolder);
-                                    }
-                                }
-                            }
-                            section.biomes = container;
-                        }
+                        // Create a container pre-filled with the target biome.
+                        // Using recreate() would leave a null entry in the palette,
+                        // causing "No value with id -1" during chunk serialization.
+                        PalettedContainer<Holder<Biome>> container = new PalettedContainer<>(
+                            registry.asHolderIdMap(),
+                            biomeHolder,
+                            PalettedContainer.Strategy.SECTION_BIOMES
+                        );
+                        section.biomes = container;
                     }
                 }
             }

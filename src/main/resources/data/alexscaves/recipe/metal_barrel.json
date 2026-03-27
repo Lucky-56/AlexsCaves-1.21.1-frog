@@ -10,7 +10,7 @@
       "item": "alexscaves:scrap_metal"
     },
     "B": {
-      "tag": "neoforge:barrels/wooden"
+      "tag": "c:barrels/wooden"
     }
   },
   "result": { "id": "alexscaves:metal_barrel"

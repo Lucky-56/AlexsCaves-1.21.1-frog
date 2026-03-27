@@ -13,7 +13,7 @@
       "item": "minecraft:glowstone"
     },
     "D": {
-      "tag": "neoforge:dyes/pink"
+      "tag": "c:dyes/pink"
     }
   },
   "result": { "id": "alexscaves:radon_lamp_pink",

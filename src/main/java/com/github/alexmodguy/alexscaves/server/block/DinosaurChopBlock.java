@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -107,8 +106,6 @@ public class DinosaurChopBlock extends Block implements SimpleWaterloggedBlock {
 
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        LevelAccessor levelaccessor = context.getLevel();
-        BlockPos blockpos = context.getClickedPos();
         return this.defaultBlockState().setValue(WATERLOGGED, false).setValue(FACING, context.getNearestLookingDirection().getOpposite());
 
     }
@@ -140,14 +137,14 @@ public class DinosaurChopBlock extends Block implements SimpleWaterloggedBlock {
         return super.updateShape(state, direction, state1, levelAccessor, blockPos, blockPos1);
     }
 
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
-        ItemStack itemstack = player.getItemInHand(hand);
+    @Override
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         if (level.isClientSide) {
             if (eat(level, blockPos, blockState, player).consumesAction()) {
                 return InteractionResult.SUCCESS;
             }
 
-            if (itemstack.isEmpty()) {
+            if (player.getMainHandItem().isEmpty()) {
                 return InteractionResult.CONSUME;
             }
         }

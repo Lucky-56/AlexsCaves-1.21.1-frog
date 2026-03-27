@@ -17,14 +17,14 @@ public class FloaterItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if(player.isInWaterOrBubble() && !player.isShiftKeyDown()){
-            FloaterEntity floaterEntity = ACEntityRegistry.FLOATER.get().create(level);
-            floaterEntity.copyPosition(player);
             if(!level.isClientSide){
+                FloaterEntity floaterEntity = ACEntityRegistry.FLOATER.get().create(level);
+                floaterEntity.copyPosition(player);
                 level.addFreshEntity(floaterEntity);
-            }
-            player.getRootVehicle().startRiding(floaterEntity);
-            if(!player.isCreative()){
-                itemstack.shrink(1);
+                player.getRootVehicle().startRiding(floaterEntity);
+                if(!player.isCreative()){
+                    itemstack.shrink(1);
+                }
             }
             return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
         }else{

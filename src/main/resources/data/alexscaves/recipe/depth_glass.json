@@ -7,7 +7,7 @@
   ],
   "key": {
     "I": {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "S": {
       "item": "alexscaves:sea_glass_shards"

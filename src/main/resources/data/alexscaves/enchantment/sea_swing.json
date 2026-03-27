@@ -2,7 +2,7 @@
   "description": {
     "translate": "enchantment.alexscaves.sea_swing"
   },
-  "supported_items": "#alexscaves:enchantable/sea_staff",
+  "supported_items": "#alexscaves:enchantable/ortholance",
   "weight": 5,
   "max_level": 3,
   "min_cost": {

@@ -16,7 +16,7 @@
       "item": "alexscaves:limestone"
     },
     "D": {
-      "tag": "neoforge:gems/diamond"
+      "tag": "c:gems/diamond"
     }
   },
   "result": { "id": "alexscaves:amber_monolith",

@@ -2,7 +2,7 @@
   "description": {
     "translate": "enchantment.alexscaves.crystallization"
   },
-  "supported_items": "#alexscaves:enchantable/resistor_shield",
+  "supported_items": "#alexscaves:enchantable/galena_gauntlet",
   "weight": 5,
   "max_level": 3,
   "min_cost": {

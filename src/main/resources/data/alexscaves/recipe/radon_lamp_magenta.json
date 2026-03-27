@@ -13,7 +13,7 @@
       "item": "minecraft:glowstone"
     },
     "D": {
-      "tag": "neoforge:dyes/magenta"
+      "tag": "c:dyes/magenta"
     }
   },
   "result": { "id": "alexscaves:radon_lamp_magenta",

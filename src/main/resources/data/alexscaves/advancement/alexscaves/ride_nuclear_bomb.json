@@ -17,9 +17,17 @@
         "ride_nuclear_bomb": {
             "trigger": "minecraft:started_riding",
             "conditions": {
-                "vehicle": {
-                    "type": "alexscaves:nuclear_bomb"
-                }
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "vehicle": {
+                                "type": "alexscaves:nuclear_bomb"
+                            }
+                        }
+                    }
+                ]
             }
         }
     }

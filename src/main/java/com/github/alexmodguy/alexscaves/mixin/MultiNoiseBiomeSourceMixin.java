@@ -43,6 +43,9 @@ public class MultiNoiseBiomeSourceMixin implements MultiNoiseBiomeSourceAccessor
     @Unique
     private ResourceKey<Level> lastSampledDimension;
 
+    @Unique
+    private boolean ac_biomesExpanded = false;
+
     @Inject(at = @At("HEAD"),
             method = "Lnet/minecraft/world/level/biome/MultiNoiseBiomeSource;getNoiseBiome(IIILnet/minecraft/world/level/biome/Climate$Sampler;)Lnet/minecraft/core/Holder;",
             cancellable = true
@@ -75,7 +78,10 @@ public class MultiNoiseBiomeSourceMixin implements MultiNoiseBiomeSourceAccessor
             return;
         }
 
-        ac_ensureBiomesExpanded(biomeMap);
+        if (!ac_biomesExpanded) {
+            ac_ensureBiomesExpanded(biomeMap);
+            ac_biomesExpanded = true;
+        }
         
         // Get voronoi info for this position
         VoronoiGenerator.VoronoiInfo voronoiInfo = ACBiomeRarity.getRareBiomeInfoForQuad(seed, x, z);
@@ -83,24 +89,23 @@ public class MultiNoiseBiomeSourceMixin implements MultiNoiseBiomeSourceAccessor
             float unquantizedDepth = Climate.unquantizeCoord(sampler.sample(x, y, z).depth());
             int foundRarityOffset = ACBiomeRarity.getRareBiomeOffsetId(voronoiInfo);
 
-            synchronized (BiomeGenerationConfig.BIOMES_LOCK) {
-                for (Map.Entry<ResourceKey<Biome>, BiomeGenerationNoiseCondition> condition : BiomeGenerationConfig.BIOMES.entrySet()) {
-                    if (foundRarityOffset == condition.getValue().getRarityOffset() &&
-                        condition.getValue().test(x, y, z, unquantizedDepth, sampler, dimension, voronoiInfo)) {
+            // Use volatile snapshot — no lock needed since BIOMES is only written at startup
+            for (Map.Entry<ResourceKey<Biome>, BiomeGenerationNoiseCondition> condition : BiomeGenerationConfig.getBiomesSnapshot().entrySet()) {
+                if (foundRarityOffset == condition.getValue().getRarityOffset() &&
+                    condition.getValue().test(x, y, z, unquantizedDepth, sampler, dimension, voronoiInfo)) {
 
-                        if (condition.getKey() == ACBiomeRegistry.ABYSSAL_CHASM) {
-                            Climate.TargetPoint localPoint = sampler.sample(x, y, z);
-                            float localContinentalness = Climate.unquantizeCoord(localPoint.continentalness());
-                            if (localContinentalness > -0.5F) {
-                                continue; // Skip this biome, let vanilla handle it
-                            }
+                    if (condition.getKey() == ACBiomeRegistry.ABYSSAL_CHASM) {
+                        Climate.TargetPoint localPoint = sampler.sample(x, y, z);
+                        float localContinentalness = Climate.unquantizeCoord(localPoint.continentalness());
+                        if (localContinentalness > -0.5F) {
+                            continue; // Skip this biome, let vanilla handle it
                         }
+                    }
 
-                        Holder<Biome> biomeHolder = biomeMap.get(condition.getKey());
-                        if (biomeHolder != null) {
-                            cir.setReturnValue(biomeHolder);
-                            return;
-                        }
+                    Holder<Biome> biomeHolder = biomeMap.get(condition.getKey());
+                    if (biomeHolder != null) {
+                        cir.setReturnValue(biomeHolder);
+                        return;
                     }
                 }
             }

@@ -232,7 +232,10 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
             this.usePlayerItem(player, hand, itemstack);
             return InteractionResult.SUCCESS;
         }else if(!prev.consumesAction() && this.getRideableFor() > 0 && !this.isBaby() && this.canAddPassenger(player)){
-            player.startRiding(this);
+            if (!level().isClientSide && player.startRiding(this)) {
+                return InteractionResult.CONSUME;
+            }
+            return InteractionResult.SUCCESS;
         }
         return prev;
     }

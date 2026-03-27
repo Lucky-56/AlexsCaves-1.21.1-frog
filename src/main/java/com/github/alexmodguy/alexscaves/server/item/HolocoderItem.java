@@ -45,20 +45,22 @@ public class HolocoderItem extends Item {
         }
         tag.put("BoundEntityTag", entityTag);
         
-        // Create new holocoder with bound entity
-        ItemStack newHolocoder = new ItemStack(ACItemRegistry.HOLOCODER.get());
-        newHolocoder.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
-        
-        // Shrink original stack
-        stack.shrink(1);
-        
-        // Give new holocoder to player
         player.swing(hand);
-        if (!player.addItem(newHolocoder)) {
-            ItemEntity itemEntity = player.drop(newHolocoder, false);
-            if (itemEntity != null) {
-                itemEntity.setNoPickUpDelay();
-                itemEntity.setThrower(player);
+        
+        // If stack size is 1, modify in-place to avoid vanishing
+        if (stack.getCount() == 1) {
+            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        } else {
+            // Stack size > 1: shrink and give new coded holocoder
+            stack.shrink(1);
+            ItemStack newHolocoder = new ItemStack(ACItemRegistry.HOLOCODER.get());
+            newHolocoder.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+            if (!player.addItem(newHolocoder)) {
+                ItemEntity itemEntity = player.drop(newHolocoder, false);
+                if (itemEntity != null) {
+                    itemEntity.setNoPickUpDelay();
+                    itemEntity.setThrower(player);
+                }
             }
         }
         

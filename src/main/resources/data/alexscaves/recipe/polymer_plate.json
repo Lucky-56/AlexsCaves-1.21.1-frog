@@ -11,7 +11,7 @@
       "item": "alexscaves:sulfur_dust"
     },
     {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   ],
   "result": { "id": "alexscaves:polymer_plate",

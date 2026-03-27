@@ -90,7 +90,13 @@ public class ACEnchantmentRegistry {
         return ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(AlexsCaves.MODID, name));
     }
     
-    public static void addAllEnchantsToCreativeTab(CreativeModeTab.Output output, ResourceKey<Enchantment> itemEnchantKey) {
+    public static void addAllEnchantsToCreativeTab(CreativeModeTab.Output output, HolderLookup.Provider registries, ResourceKey<Enchantment> itemEnchantKey) {
+        for (ResourceKey<Enchantment> enchantKey : getEnchantsForItem(itemEnchantKey)) {
+            ItemStack book = createEnchantedBook(registries, enchantKey);
+            if (!book.isEmpty()) {
+                output.accept(book);
+            }
+        }
     }
     
     public static List<ResourceKey<Enchantment>> getEnchantsForItem(ResourceKey<Enchantment> itemKey) {

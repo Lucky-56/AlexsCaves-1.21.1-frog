@@ -10,7 +10,7 @@
       "item": "alexscaves:limestone"
     },
     "S": {
-      "tag": "neoforge:rods/wooden"
+      "tag": "c:rods/wooden"
     }
   },
   "result": { "id": "alexscaves:limestone_spear",

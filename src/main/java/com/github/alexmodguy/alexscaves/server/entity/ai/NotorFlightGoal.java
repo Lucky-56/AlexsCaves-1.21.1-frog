@@ -28,7 +28,6 @@ public class NotorFlightGoal extends Goal {
         if (entity.isVehicle() || (entity.getTarget() != null && entity.getTarget().isAlive()) || entity.isPassenger()) {
             return false;
         } else {
-            boolean flag = false;
             if (entity.onGround() && entity.getRandom().nextInt(45) != 0) {
                 return false;
             }

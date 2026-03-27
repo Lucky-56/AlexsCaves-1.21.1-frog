@@ -2,20 +2,16 @@ package com.github.alexmodguy.alexscaves.server.block;
 
 import com.github.alexmodguy.alexscaves.server.block.blockentity.ACBlockEntityRegistry;
 import com.github.alexmodguy.alexscaves.server.block.blockentity.ConversionCrucibleBlockEntity;
-import com.github.alexmodguy.alexscaves.server.block.blockentity.CopperValveBlockEntity;
 import com.github.alexmodguy.alexscaves.server.item.ACItemRegistry;
 import com.github.alexmodguy.alexscaves.server.item.BiomeTreatItem;
-import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -78,8 +74,8 @@ public class ConversionCrucibleBlock extends BaseEntityBlock {
     }
 
 
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack playerItem = player.getItemInHand(handIn);
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack playerItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof ConversionCrucibleBlockEntity crucible && !player.isShiftKeyDown()) {
             if(crucible.getConvertingToBiome() != null){
                 if(crucible.getWantItem().isEmpty()){
@@ -95,9 +91,9 @@ public class ConversionCrucibleBlock extends BaseEntityBlock {
                         }
                         crucible.markUpdated();
                     }
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }else if(playerItem.is(ACItemRegistry.BIOME_TREAT.get()) && BiomeTreatItem.getCaveBiome(playerItem) != null){
                 if(!worldIn.isClientSide){
                     crucible.setConvertingToBiome(BiomeTreatItem.getCaveBiome(playerItem));
@@ -105,10 +101,10 @@ public class ConversionCrucibleBlock extends BaseEntityBlock {
                     crucible.rerollWantedItem();
                     crucible.markUpdated();
                 }
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
 

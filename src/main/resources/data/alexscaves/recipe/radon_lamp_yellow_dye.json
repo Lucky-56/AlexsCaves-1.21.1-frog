@@ -10,7 +10,7 @@
       "tag": "alexscaves:radon_lamps"
     },
     "D": {
-      "tag": "neoforge:dyes/yellow"
+      "tag": "c:dyes/yellow"
     }
   },
   "result": { "id": "alexscaves:radon_lamp_yellow",

@@ -13,7 +13,7 @@
       "item": "alexscaves:peppermint_powder"
     },
     "D": {
-      "tag": "neoforge:dyes/gray"
+      "tag": "c:dyes/gray"
     }
   },
   "result": { "id": "alexscaves:rock_candy_gray",

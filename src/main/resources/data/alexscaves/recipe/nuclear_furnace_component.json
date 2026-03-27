@@ -10,7 +10,7 @@
       "item": "alexscaves:charred_remnant"
     },
     "U": {
-      "tag": "neoforge:raw_materials/uranium"
+      "tag": "c:raw_materials/uranium"
     },
     "F": {
       "item": "minecraft:blast_furnace"

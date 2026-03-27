@@ -49,13 +49,13 @@ public class LollipopProcessor extends StructureProcessor {
     }
 
     public LollipopProcessor(RandomSource randomSource){
-        this(randomSource.nextInt(BLOCK_COLOR_PALETTES.length - 1));
+        this(randomSource.nextInt(BLOCK_COLOR_PALETTES.length));
     }
 
     @Nullable
     public StructureTemplate.StructureBlockInfo processBlock(LevelReader levelReader, BlockPos blockPosUnused, BlockPos pos, StructureTemplate.StructureBlockInfo relativeInfo, StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings) {
         BlockState in = info.state();
-        int clampedPaletteIndex = Mth.clamp(paletteIndex, 0, BLOCK_COLOR_PALETTES.length);
+        int clampedPaletteIndex = Mth.clamp(paletteIndex, 0, BLOCK_COLOR_PALETTES.length - 1);
         if(in.is(ACBlockRegistry.BLACK_ROCK_CANDY.get())){ // color palette 0
             return new StructureTemplate.StructureBlockInfo(info.pos(), BLOCK_COLOR_PALETTES[clampedPaletteIndex][0].defaultBlockState(), info.nbt());
         }else if(in.is(ACBlockRegistry.GRAY_ROCK_CANDY.get())){ // color palette 1

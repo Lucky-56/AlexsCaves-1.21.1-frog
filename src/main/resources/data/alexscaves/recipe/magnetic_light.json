@@ -9,7 +9,7 @@
       "item": "alexscaves:notor_gizmo"
     },
     "I": {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "result": { "id": "alexscaves:magnetic_light",

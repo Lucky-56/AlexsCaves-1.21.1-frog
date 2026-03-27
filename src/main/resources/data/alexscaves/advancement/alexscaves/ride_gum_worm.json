@@ -16,9 +16,17 @@
     "ride_gum_worm": {
       "trigger": "minecraft:started_riding",
       "conditions": {
-        "vehicle": {
-          "type": "alexscaves:gum_worm_segment"
-        }
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "vehicle": {
+                "type": "alexscaves:gum_worm_segment"
+              }
+            }
+          }
+        ]
       }
     }
   }

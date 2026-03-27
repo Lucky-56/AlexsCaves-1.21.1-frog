@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -71,7 +70,8 @@ public class NuclearFurnaceBlock extends BaseEntityBlock {
         return super.updateShape(state, direction, state1, levelAccessor, blockPos, blockPos1);
     }
 
-    public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos blockPos, Player player, BlockHitResult result) {
         if(!player.isShiftKeyDown()){
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;

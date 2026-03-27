@@ -6,7 +6,6 @@ import com.github.alexmodguy.alexscaves.server.misc.ACMath;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -147,7 +146,8 @@ public class CopperValveBlock extends BaseEntityBlock implements SimpleWaterlogg
     }
 
 
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof CopperValveBlockEntity copperValve && !player.isShiftKeyDown()) {
             if (state.getValue(TURNED)) {
                 copperValve.moveDown(false);

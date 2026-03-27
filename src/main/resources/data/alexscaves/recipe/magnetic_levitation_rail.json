@@ -10,10 +10,10 @@
       "item": "alexscaves:azure_neodymium_ingot"
     },
     "I": {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "S": {
-      "tag": "neoforge:rods/wooden"
+      "tag": "c:rods/wooden"
     }
   },
   "result": { "id": "alexscaves:magnetic_levitation_rail",

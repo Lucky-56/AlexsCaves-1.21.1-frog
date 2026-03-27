@@ -6,7 +6,7 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.111'
 }
 
-version = '2.0.9'
+version = '2.0.10'
 group = 'com.github.alexthe668'
 
 base {
@@ -46,7 +46,7 @@ repositories {
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 neoForge {
-    version = '21.1.203'
+    version = '21.1.219'
 
     parchment {
         mappingsVersion = '2024.07.28'
@@ -88,8 +88,8 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    implementation "net.neoforged:neoforge:21.1.203"
-    implementation 'com.github.alexthe666.citadel:citadel-1.21.1:2.7.0'
+    implementation "net.neoforged:neoforge:21.1.219"
+    implementation "curse.maven:citadel-331936:7476597"
 
     compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"

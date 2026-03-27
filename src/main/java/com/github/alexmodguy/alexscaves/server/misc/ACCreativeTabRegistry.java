@@ -92,8 +92,8 @@ public class ACCreativeTabRegistry {
                 output.accept(ACEffectRegistry.createSplashPotion(ACEffectRegistry.LONG_MAGNETIZING_POTION));
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.MAGNETIZING_POTION));
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.LONG_MAGNETIZING_POTION));
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.GALENA_GAUNTLET);
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.RESISTOR_SHIELD);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.GALENA_GAUNTLET);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.RESISTOR_SHIELD);
             })
             .build());
 
@@ -214,8 +214,8 @@ public class ACCreativeTabRegistry {
                 add(output, ACBlockRegistry.PRIMAL_MAGMA.get());
                 add(output, ACBlockRegistry.FLOOD_BASALT.get());
                 add(output, ACBlockRegistry.VOLCANIC_CORE.get());
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.PRIMITIVE_CLUB);
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.EXTINCTION_SPEAR);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.PRIMITIVE_CLUB);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.EXTINCTION_SPEAR);
             })
             .build());
 
@@ -318,7 +318,7 @@ public class ACCreativeTabRegistry {
                 add(output, ACBlockRegistry.RED_RADON_LAMP.get());
                 add(output, ACBlockRegistry.BLACK_RADON_LAMP.get());
                 add(output, ACBlockRegistry.TREMORZILLA_EGG.get());
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.RAYGUN);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.RAYGUN);
             })
             .build());
 
@@ -414,9 +414,9 @@ public class ACCreativeTabRegistry {
                 output.accept(ACEffectRegistry.createSplashPotion(ACEffectRegistry.LONG_GLOWING_POTION));
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.GLOWING_POTION));
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.LONG_GLOWING_POTION));
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.ORTHOLANCE);
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.MAGIC_CONCH);
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.SEA_STAFF);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.ORTHOLANCE);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.MAGIC_CONCH);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.SEA_STAFF);
             })
             .build());
 
@@ -505,9 +505,9 @@ public class ACCreativeTabRegistry {
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.HASTE_POTION));
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.LONG_HASTE_POTION));
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.STRONG_HASTE_POTION));
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.TOTEM_OF_POSSESSION);
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.DESOLATE_DAGGER);
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.DREADBOW);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.TOTEM_OF_POSSESSION);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.DESOLATE_DAGGER);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.DREADBOW);
             })
             .build());
 
@@ -652,9 +652,9 @@ public class ACCreativeTabRegistry {
                 output.accept(ACEffectRegistry.createSplashPotion(ACEffectRegistry.LONG_SUGAR_RUSH_POTION));
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.SUGAR_RUSH_POTION));
                 output.accept(ACEffectRegistry.createLingeringPotion(ACEffectRegistry.LONG_SUGAR_RUSH_POTION));
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.SHOT_GUM);
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.CANDY_CANE_HOOK);
-                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, ACEnchantmentRegistry.SUGAR_STAFF);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.SHOT_GUM);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.CANDY_CANE_HOOK);
+                ACEnchantmentRegistry.addAllEnchantsToCreativeTab(output, enabledFeatures.holders(), ACEnchantmentRegistry.SUGAR_STAFF);
             })
             .build());
 

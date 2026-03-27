@@ -10,7 +10,7 @@
       "tag": "alexscaves:radon_lamps"
     },
     "D": {
-      "tag": "neoforge:dyes/light_gray"
+      "tag": "c:dyes/light_gray"
     }
   },
   "result": { "id": "alexscaves:radon_lamp_light_gray",

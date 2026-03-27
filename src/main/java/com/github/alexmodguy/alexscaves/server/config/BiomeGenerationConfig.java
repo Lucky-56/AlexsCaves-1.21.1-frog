@@ -49,6 +49,11 @@ public class BiomeGenerationConfig {
             .dimensions(OVERWORLD).distanceFromSpawn(500).alexscavesRarityOffset(5).continentalness(0.5F, 1F).depth(0.05F, 2F).build();
     public static final LinkedHashMap<ResourceKey<Biome>, BiomeGenerationNoiseCondition> BIOMES = new LinkedHashMap<>();
     public static final Object BIOMES_LOCK = new Object();
+    
+    // Volatile snapshot for lock-free reads during world gen hot path.
+    // Published after reloadConfig() completes. Readers never need to acquire BIOMES_LOCK.
+    private static volatile Map<ResourceKey<Biome>, BiomeGenerationNoiseCondition> biomesSnapshot = Map.of();
+    private static volatile int biomesCountSnapshot = 0;
 
     public static void reloadConfig() {
         // Check version and delete old configs if needed BEFORE loading
@@ -61,6 +66,9 @@ public class BiomeGenerationConfig {
             BIOMES.put(ACBiomeRegistry.ABYSSAL_CHASM, getConfigData("abyssal_chasm", ABYSSAL_CHASM_CONDITION));
             BIOMES.put(ACBiomeRegistry.FORLORN_HOLLOWS, getConfigData("forlorn_hollows", FORLORN_HOLLOWS_CONDITION));
             BIOMES.put(ACBiomeRegistry.CANDY_CAVITY, getConfigData("candy_cavity", CANDY_CAVITY_CONDITION));
+            // Publish immutable snapshot for lock-free reads
+            biomesSnapshot = new LinkedHashMap<>(BIOMES);
+            biomesCountSnapshot = BIOMES.size();
         }
     }
 
@@ -74,6 +82,21 @@ public class BiomeGenerationConfig {
         synchronized (BIOMES_LOCK) {
             return BIOMES.size();
         }
+    }
+    
+    /**
+     * Lock-free biome count for hot path usage during world gen.
+     */
+    public static int getBiomeCountFast() {
+        return biomesCountSnapshot;
+    }
+    
+    /**
+     * Returns a snapshot of the biome config map for lock-free reads.
+     * Safe to iterate without synchronization.
+     */
+    public static Map<ResourceKey<Biome>, BiomeGenerationNoiseCondition> getBiomesSnapshot() {
+        return biomesSnapshot;
     }
 
     public static boolean isBiomeDisabledCompletely(ResourceKey<Biome> biome){

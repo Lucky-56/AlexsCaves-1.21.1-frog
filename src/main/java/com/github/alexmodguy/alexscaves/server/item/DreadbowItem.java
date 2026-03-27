@@ -95,8 +95,8 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
                 setPerfectShotTicks(stack, getPerfectShotTicks(stack) - 1);
                 AlexsCaves.sendMSGToServer(new UpdateItemTagMessage(entity.getId(), stack));
             }
-            boolean relentless = stack.getEnchantmentLevel(entity.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.RELENTLESS_DARKNESS)) > 0;
-            int twilightPerfection = stack.getEnchantmentLevel(entity.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.TWILIGHT_PERFECTION));
+            boolean relentless = safeEnchantLevel(stack, entity, ACEnchantmentRegistry.RELENTLESS_DARKNESS) > 0;
+            int twilightPerfection = safeEnchantLevel(stack, entity, ACEnchantmentRegistry.TWILIGHT_PERFECTION);
             int maxLoadTime = getMaxLoadTime(stack, entity);
             if (using && useTime < maxLoadTime) {
                 int set = useTime + (relentless ? 3 : 1);
@@ -128,10 +128,10 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
     }
 
     private static int getMaxLoadTime(ItemStack stack, Entity entity) {
-        if(stack.getEnchantmentLevel(entity.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.RELENTLESS_DARKNESS)) > 0){
+        if(safeEnchantLevel(stack, entity, ACEnchantmentRegistry.RELENTLESS_DARKNESS) > 0){
             return 5;
         }else{
-            return 40 - 8 * stack.getEnchantmentLevel(entity.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.DARK_NOCK));
+            return 40 - 8 * safeEnchantLevel(stack, entity, ACEnchantmentRegistry.DARK_NOCK);
         }
     }
 
@@ -194,12 +194,12 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
     }
 
     public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int i1) {
-        if (livingEntity instanceof Player player && itemStack.getEnchantmentLevel(livingEntity.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.RELENTLESS_DARKNESS)) <= 0) {
+        if (livingEntity instanceof Player player && safeEnchantLevel(itemStack, livingEntity, ACEnchantmentRegistry.RELENTLESS_DARKNESS) <= 0) {
             int i = this.getUseDuration(itemStack, livingEntity) - i1;
             float f = getPowerForTime(i, itemStack, livingEntity);
-            boolean precise = itemStack.getEnchantmentLevel(livingEntity.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.PRECISE_VOLLEY)) > 0;
-            boolean respite = itemStack.getEnchantmentLevel(livingEntity.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.SHADED_RESPITE)) > 0 && !DarknessIncarnateEffect.isInLight(player, 11);
-            boolean perfectShot = itemStack.getEnchantmentLevel(livingEntity.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.TWILIGHT_PERFECTION)) > 0 && getPerfectShotTicks(itemStack) > 0;
+            boolean precise = safeEnchantLevel(itemStack, livingEntity, ACEnchantmentRegistry.PRECISE_VOLLEY) > 0;
+            boolean respite = safeEnchantLevel(itemStack, livingEntity, ACEnchantmentRegistry.SHADED_RESPITE) > 0 && !DarknessIncarnateEffect.isInLight(player, 11);
+            boolean perfectShot = safeEnchantLevel(itemStack, livingEntity, ACEnchantmentRegistry.TWILIGHT_PERFECTION) > 0 && getPerfectShotTicks(itemStack) > 0;
             if (f > 0.1D) {
                 player.playSound(ACSoundRegistry.DREADBOW_RELEASE.get());
                 ItemStack ammoStack = player.getProjectile(itemStack);
@@ -272,8 +272,8 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
 
     public void onUseTick(Level level, LivingEntity living, ItemStack itemStack, int timeUsing) {
         super.onUseTick(level, living, itemStack, timeUsing);
-        if(living instanceof Player player && itemStack.getEnchantmentLevel(living.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.RELENTLESS_DARKNESS)) > 0 && timeUsing % 3 == 0){
-            boolean respite = itemStack.getEnchantmentLevel(living.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(ACEnchantmentRegistry.SHADED_RESPITE)) > 0 && !DarknessIncarnateEffect.isInLight(living, 11);
+        if(living instanceof Player player && safeEnchantLevel(itemStack, living, ACEnchantmentRegistry.RELENTLESS_DARKNESS) > 0 && timeUsing % 3 == 0){
+            boolean respite = safeEnchantLevel(itemStack, living, ACEnchantmentRegistry.SHADED_RESPITE) > 0 && !DarknessIncarnateEffect.isInLight(living, 11);
             player.playSound(ACSoundRegistry.DREADBOW_RELEASE.get());
             ItemStack ammoStack = player.getProjectile(itemStack);
             if(respite && ammoStack.isEmpty()){
@@ -337,5 +337,17 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
     @Override
     public int getDefaultProjectileRange() {
         return 64;
+    }
+
+    /**
+     * Safely looks up an enchantment level without throwing if the enchantment key is missing.
+     * Returns 0 if the enchantment is not found in the registry.
+     */
+    private static int safeEnchantLevel(ItemStack stack, Entity entity, net.minecraft.resources.ResourceKey<net.minecraft.world.item.enchantment.Enchantment> key) {
+        return entity.registryAccess()
+                .lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
+                .get(key)
+                .map(stack::getEnchantmentLevel)
+                .orElse(0);
     }
 }

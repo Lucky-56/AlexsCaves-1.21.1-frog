@@ -10,7 +10,7 @@
       "item": "alexscaves:fissile_core"
     },
     "R": {
-      "tag": "neoforge:storage_blocks/redstone"
+      "tag": "c:storage_blocks/redstone"
     },
     "P": {
       "item": "alexscaves:polymer_plate"

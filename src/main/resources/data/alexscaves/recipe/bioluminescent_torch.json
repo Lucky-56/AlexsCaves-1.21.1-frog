@@ -9,7 +9,7 @@
       "item": "alexscaves:bioluminesscence"
     },
     "S": {
-      "tag": "neoforge:rods/wooden"
+      "tag": "c:rods/wooden"
     }
   },
   "result": { "id": "alexscaves:bioluminescent_torch",

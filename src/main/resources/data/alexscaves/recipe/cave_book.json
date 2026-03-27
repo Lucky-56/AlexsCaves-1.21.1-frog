@@ -8,7 +8,7 @@
       "item": "alexscaves:cave_tablet"
     },
     {
-      "tag": "neoforge:nuggets/gold"
+      "tag": "c:nuggets/gold"
     }
   ],
   "result": { "id": "alexscaves:cave_book"

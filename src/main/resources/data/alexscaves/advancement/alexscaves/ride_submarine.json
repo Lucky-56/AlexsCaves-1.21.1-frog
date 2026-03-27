@@ -16,9 +16,17 @@
         "ride_submarine": {
             "trigger": "minecraft:started_riding",
             "conditions": {
-                "vehicle": {
-                    "type": "alexscaves:submarine"
-                }
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "vehicle": {
+                                "type": "alexscaves:submarine"
+                            }
+                        }
+                    }
+                ]
             }
         }
     }

@@ -11,13 +11,13 @@
       "item": "alexscaves:raw_scarlet_neodymium"
     },
     {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   ],
   "result": { "id": "alexscaves:scarlet_neodymium_ingot",

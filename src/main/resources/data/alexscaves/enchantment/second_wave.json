@@ -2,7 +2,7 @@
   "description": {
     "translate": "enchantment.alexscaves.second_wave"
   },
-  "supported_items": "#alexscaves:enchantable/raygun",
+  "supported_items": "#alexscaves:enchantable/ortholance",
   "weight": 3,
   "max_level": 1,
   "min_cost": {

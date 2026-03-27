@@ -1298,7 +1298,8 @@ public class TremorzillaEntity extends DinosaurEntity implements KeybindUsingMou
 
     @Override
     protected EntityDimensions getDefaultDimensions(Pose poseIn) {
-        return this.isTremorzillaSwimming() ? SWIMMING_SIZE.scale(this.getScale()) : super.getDefaultDimensions(poseIn);
+        // In 1.21.1 getDimensions() already applies getScale(), so don't scale again here
+        return this.isTremorzillaSwimming() ? SWIMMING_SIZE : super.getDefaultDimensions(poseIn);
     }
 
     public boolean isTremorzillaSwimming() {

@@ -22,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -67,8 +68,8 @@ public class SubmarineRenderer extends EntityRenderer<SubmarineEntity> {
     public static void renderSubmarine(SubmarineEntity entity, float partialTicks, PoseStack poseStack, MultiBufferSource source, int lightIn, boolean maskWater) {
         Player player = Minecraft.getInstance().player;
         float ageInTicks = entity.tickCount + partialTicks;
-    float submarineYaw = entity.getRenderYaw(partialTicks);
-    float submarinePitch = entity.getRenderPitch(partialTicks);
+    float submarineYaw = entity.getViewYRot(partialTicks);
+    float submarinePitch = entity.getViewXRot(partialTicks);
         poseStack.pushPose();
         poseStack.translate(0.0D, 1.5D, 0.0D);
         poseStack.mulPose(Axis.YP.rotationDegrees(180 - submarineYaw));
@@ -84,13 +85,13 @@ public class SubmarineRenderer extends EntityRenderer<SubmarineEntity> {
         // Render submarine model first
         VertexConsumer textureBuffer = source.getBuffer(RenderType.entityCutoutNoCull(getSubmarineBaseTexture(entity)));
         MODEL.renderToBuffer(poseStack, textureBuffer, lightIn, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-        VertexConsumer damageBuffer = source.getBuffer(RenderType.entityTranslucent(getSubmarineDamageTexture(entity)));
+        VertexConsumer damageBuffer = source.getBuffer(ACRenderTypes.getSubmarineDamageOverlay(getSubmarineDamageTexture(entity)));
         MODEL.renderToBuffer(poseStack, damageBuffer, lightIn, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         if (entity.getDamageLevel() <= 3) {
-            VertexConsumer buttonsBuffer = source.getBuffer(ACRenderTypes.getEyesAlphaEnabled(TEXTURE_BUTTONS));
+            VertexConsumer buttonsBuffer = source.getBuffer(ACRenderTypes.getSubmarineConsole(TEXTURE_BUTTONS));
             int argb = ((int)(entity.getSonarFlashAmount(partialTicks) * 255) << 24) | 0xFFFFFF;
             MODEL.renderToBuffer(poseStack, buttonsBuffer, lightIn, OverlayTexture.NO_OVERLAY, argb);
-            if (entity.areLightsOn() && entity.isVehicle()) {
+            if (entity.areLightsOn() && entity.isVehicle() && !isFirstPersonFloodlightsMode(entity)) {
                 VertexConsumer glowBuffer = source.getBuffer(RenderType.eyes(TEXTURE_GLOW));
                 MODEL.renderToBuffer(poseStack, glowBuffer, lightIn, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
             }
@@ -124,21 +125,22 @@ public class SubmarineRenderer extends EntityRenderer<SubmarineEntity> {
             }
             float length = 4.5F;
             float width = 0.45F;
-            poseStack.pushPose();
-            poseStack.translate(0, 0.75F, -2.4F);
-            poseStack.mulPose(Axis.YN.rotationDegrees(submarineYaw));
-            poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
-            poseStack.mulPose(Axis.XN.rotationDegrees(90 - xRot));
-            poseStack.scale(3, 1, 1);
-            poseStack.translate(0, -1, 0F);
-            PoseStack.Pose posestack$pose = poseStack.last();
-            Matrix4f matrix4f1 = posestack$pose.pose();
-            VertexConsumer lightConsumer = source.getBuffer(ACRenderTypes.getSubmarineLights());
-            shineOriginVertex(lightConsumer, matrix4f1, posestack$pose, 0, 0);
-            shineLeftCornerVertex(lightConsumer, matrix4f1, posestack$pose, length, width, 0, 0);
-            shineRightCornerVertex(lightConsumer, matrix4f1, posestack$pose, length, width, 0, 0);
-            shineLeftCornerVertex(lightConsumer, matrix4f1, posestack$pose, length, width, 0, 0);
-            poseStack.popPose();
+            for (int beam = -1; beam <= 1; beam += 2) {
+                poseStack.pushPose();
+                poseStack.translate(beam * 0.55F, 0.75F, -2.4F);
+                poseStack.mulPose(Axis.YN.rotationDegrees(submarineYaw));
+                poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
+                poseStack.mulPose(Axis.XN.rotationDegrees(90 - xRot));
+                poseStack.translate(0, -1, 0F);
+                PoseStack.Pose posestack$pose = poseStack.last();
+                Matrix4f matrix4f1 = posestack$pose.pose();
+                VertexConsumer lightConsumer = source.getBuffer(ACRenderTypes.getSubmarineLights());
+                shineOriginVertex(lightConsumer, matrix4f1, posestack$pose, 0, 0);
+                shineLeftCornerVertex(lightConsumer, matrix4f1, posestack$pose, length, width, 0, 0);
+                shineRightCornerVertex(lightConsumer, matrix4f1, posestack$pose, length, width, 0, 0);
+                shineLeftCornerVertex(lightConsumer, matrix4f1, posestack$pose, length, width, 0, 0);
+                poseStack.popPose();
+            }
         }
 
         poseStack.popPose();

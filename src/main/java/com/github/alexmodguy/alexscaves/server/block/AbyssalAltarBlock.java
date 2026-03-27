@@ -8,7 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -111,27 +111,30 @@ public class AbyssalAltarBlock extends BaseEntityBlock implements SimpleWaterlog
     }
 
 
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(handIn);
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof AbyssalAltarBlockEntity altarBlockEntity && !player.isShiftKeyDown()) {
-            ItemStack copy = heldItem.copy();
-            copy.setCount(1);
             if (altarBlockEntity.getItem(0).isEmpty()) {
-                altarBlockEntity.setItem(0, copy);
-                altarBlockEntity.onEntityInteract(player, false);
-                if (!player.isCreative()) {
-                    heldItem.shrink(1);
+                if (!heldItem.isEmpty()) {
+                    ItemStack copy = heldItem.copy();
+                    copy.setCount(1);
+                    altarBlockEntity.setItem(0, copy);
+                    altarBlockEntity.onEntityInteract(player, false);
+                    if (!player.isCreative()) {
+                        heldItem.shrink(1);
+                    }
+                    return ItemInteractionResult.SUCCESS;
                 }
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             } else {
                 if (altarBlockEntity.queueItemDrop(altarBlockEntity.getItem(0).copy())) {
                     altarBlockEntity.onEntityInteract(player, true);
                     altarBlockEntity.setItem(0, ItemStack.EMPTY);
                 }
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @javax.annotation.Nullable

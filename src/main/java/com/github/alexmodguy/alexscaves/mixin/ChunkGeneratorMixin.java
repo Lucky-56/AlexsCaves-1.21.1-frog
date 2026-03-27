@@ -97,6 +97,7 @@ public class ChunkGeneratorMixin {
                         RandomSource random = RandomSource.create(featureSeed);
                         feature.placeWithBiomeCheck(level, (ChunkGenerator)(Object)this, random, originPos);
                     } catch (Exception e) {
+                        AlexsCaves.LOGGER.error("AC feature {} failed to place in chunk {}", featureKey.location(), chunkPos, e);
                     }
                 }
             }

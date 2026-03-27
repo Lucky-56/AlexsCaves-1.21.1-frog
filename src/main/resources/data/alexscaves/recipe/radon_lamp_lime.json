@@ -13,7 +13,7 @@
       "item": "minecraft:glowstone"
     },
     "D": {
-      "tag": "neoforge:dyes/lime"
+      "tag": "c:dyes/lime"
     }
   },
   "result": { "id": "alexscaves:radon_lamp_lime",

@@ -10,8 +10,6 @@ import com.github.alexmodguy.alexscaves.server.potion.ACEffectRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -96,8 +94,6 @@ public WaterBoltEntity(Level level, LivingEntity shooter) {
         double d1 = this.getY() + vec3.y;
         double d2 = this.getZ() + vec3.z;
         this.updateRotation();
-        float f = 0.99F;
-        float f1 = 0.06F;
         if (this.level().getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir) && !this.isInWaterOrBubble()) {
             this.discard();
         } else {

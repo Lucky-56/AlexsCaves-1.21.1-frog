@@ -13,7 +13,7 @@
       "item": "minecraft:glowstone"
     },
     "D": {
-      "tag": "neoforge:dyes/purple"
+      "tag": "c:dyes/purple"
     }
   },
   "result": { "id": "alexscaves:radon_lamp_purple",

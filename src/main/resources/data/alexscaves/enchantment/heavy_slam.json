@@ -2,7 +2,7 @@
   "description": {
     "translate": "enchantment.alexscaves.heavy_slam"
   },
-  "supported_items": "#alexscaves:enchantable/galena_gauntlet",
+  "supported_items": "#alexscaves:enchantable/resistor_shield",
   "weight": 3,
   "max_level": 1,
   "min_cost": {

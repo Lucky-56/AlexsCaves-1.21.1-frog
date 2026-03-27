@@ -13,7 +13,7 @@
       "item": "minecraft:cauldron"
     },
     "G": {
-      "tag": "neoforge:storage_blocks/gold"
+      "tag": "c:storage_blocks/gold"
     }
   },
   "result": { "id": "alexscaves:conversion_crucible",

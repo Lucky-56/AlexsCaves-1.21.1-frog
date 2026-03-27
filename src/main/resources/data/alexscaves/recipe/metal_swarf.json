@@ -5,13 +5,13 @@
       "item": "alexscaves:ferrouslime_ball"
     },
     {
-      "tag": "neoforge:raw_materials/iron"
+      "tag": "c:raw_materials/iron"
     },
     {
-      "tag": "neoforge:gravel"
+      "tag": "c:gravel"
     },
     {
-      "tag": "neoforge:gravel"
+      "tag": "c:gravel"
     }
   ],
   "result": { "id": "alexscaves:metal_swarf",

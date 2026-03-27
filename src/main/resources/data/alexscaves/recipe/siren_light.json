@@ -13,10 +13,10 @@
       "item": "alexscaves:radon_bottle"
     },
     "G": {
-      "tag": "neoforge:glass/colorless"
+      "tag": "c:glass/colorless"
     },
     "I": {
-      "tag": "neoforge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "result": { "id": "alexscaves:siren_light",

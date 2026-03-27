@@ -298,7 +298,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
         public boolean canUse() {
             if (!RadgillEntity.this.isInLiquid()) {
                 return false;
-            } else if (RadgillEntity.this.getRandom().nextInt(4) == 0) {
+            } else if (RadgillEntity.this.getRandom().nextInt(10) == 0) {
                 boolean jump = random.nextFloat() <= 0.4F;
                 BlockPos found = findMoveToPos(jump);
                 if (found != null) {

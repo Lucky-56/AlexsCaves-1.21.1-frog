@@ -1,8 +1,7 @@
 package com.github.alexmodguy.alexscaves.mixin;
 
-import com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry;
-import net.minecraft.core.Holder;
-import net.minecraft.world.level.biome.Biome;
+import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRarity;
+import com.github.alexmodguy.alexscaves.server.level.biome.ACWorldSeedHolder;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.structures.StrongholdStructure;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,10 +24,23 @@ public class StrongholdStructureMixin {
         int i = context.chunkPos().getBlockX(9);
         int j = context.chunkPos().getBlockZ(9);
 
-        for (Holder<Biome> holder : context.biomeSource().getBiomesWithin(i, context.chunkGenerator().getSeaLevel() - 40, j, 80, context.randomState().sampler())) {
-            if (holder.is(ACTagRegistry.HAS_NO_VANILLA_STRUCTURES_IN)) {
-                cir.setReturnValue(Optional.empty());
-                return;
+        // Use the voronoi system directly instead of the expensive getBiomesWithin() call.
+        // getBiomesWithin(radius=80) queries ~1600 biome positions through the mixin pipeline,
+        // causing watchdog timeouts when mods trigger bulk stronghold lookups (e.g. EndRemastered).
+        long seed = context.seed();
+        if (seed == 0 && ACWorldSeedHolder.isInitialized()) {
+            seed = ACWorldSeedHolder.getSeed();
+        }
+        if (seed != 0) {
+            int checkRadius = 80;
+            int step = 32;
+            for (int dx = -checkRadius; dx <= checkRadius; dx += step) {
+                for (int dz = -checkRadius; dz <= checkRadius; dz += step) {
+                    if (ACBiomeRarity.getACBiomeForPosition(seed, i + dx, j + dz) != null) {
+                        cir.setReturnValue(Optional.empty());
+                        return;
+                    }
+                }
             }
         }
     }

@@ -617,7 +617,30 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
 
             return vec3;
         } else {
-            return movement;
+            AABB aabb = this.getBoundingBox();
+            List<VoxelShape> list = this.level().getEntityCollisions(this, aabb.expandTowards(movement));
+            Vec3 vec3 = movement.lengthSqr() == 0.0D ? movement : collideBoundingBox(this, movement, aabb, this.level(), list);
+            boolean flag = movement.x != vec3.x;
+            boolean flag1 = movement.y != vec3.y;
+            boolean flag2 = movement.z != vec3.z;
+            boolean flag3 = this.onGround() || flag1 && movement.y < 0.0D;
+            float stepHeight = this.maxUpStep();
+            if (stepHeight > 0.0F && flag3 && (flag || flag2)) {
+                Vec3 vec31 = collideBoundingBox(this, new Vec3(movement.x, stepHeight, movement.z), aabb, this.level(), list);
+                Vec3 vec32 = collideBoundingBox(this, new Vec3(0.0D, stepHeight, 0.0D), aabb.expandTowards(movement.x, 0.0D, movement.z), this.level(), list);
+                if (vec32.y < (double) stepHeight) {
+                    Vec3 vec33 = collideBoundingBox(this, new Vec3(movement.x, 0.0D, movement.z), aabb.move(vec32), this.level(), list).add(vec32);
+                    if (vec33.horizontalDistanceSqr() > vec31.horizontalDistanceSqr()) {
+                        vec31 = vec33;
+                    }
+                }
+
+                if (vec31.horizontalDistanceSqr() > vec3.horizontalDistanceSqr()) {
+                    return vec31.add(collideBoundingBox(this, new Vec3(0.0D, -vec31.y + movement.y, 0.0D), aabb.move(vec31), this.level(), list));
+                }
+            }
+
+            return vec3;
         }
     }
 
